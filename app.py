@@ -2,114 +2,84 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+st.set_page_config(
+    page_title="Scientific Visualization"
+)
+
+st.header("Genetic Algorithm", divider="gray")
+
+
 # 1. Load Data
-@st.cache_data
+@st.cache_data # Cache the data loading for better performance
 def load_data(url):
     """Loads the dataset from a URL."""
     try:
         df = pd.read_csv(url)
-        # Clean up column name for Academic Year, removing extra spaces if needed
-        df.columns = [col.strip() for col in df.columns]
         return df
     except Exception as e:
         st.error(f"Error loading data from URL: {e}")
-        return pd.DataFrame()
+        return pd.DataFrame() # Return an empty DataFrame on failure
 
 url = 'https://raw.githubusercontent.com/aleya566/EC2024/refs/heads/main/arts_faculty_data.csv'
 arts_df = load_data(url)
 
 # Set the title of the Streamlit app
-st.title('🎨 Arts Faculty Data Analysis Dashboard')
+st.title('🎨 Arts Faculty Data Analysis')
 
 if not arts_df.empty:
     st.subheader('Raw Data Preview')
     st.dataframe(arts_df.head())
-    st.divider()
 
-    # --- 2. Visualization Section ---
-    st.header('📊 Faculty Survey Data Insights')
+    # --- 2. Data Processing ---
+    # Calculate gender counts
+    if 'Gender' in arts_df.columns:
+        gender_counts = arts_df['Gender'].value_counts().reset_index()
+        gender_counts.columns = ['Gender', 'Count']
 
-    # Helper function to generate and display bar charts
-    def display_bar_chart(df, column_name, title, x_label, y_label='Count', orientation='v'):
-        """Creates and displays a Plotly bar chart for a given column."""
-        # Calculate value counts and rename columns for Plotly
-        data = df[column_name].value_counts().reset_index()
-        data.columns = [column_name, 'Count']
+        st.divider()
 
-        if orientation == 'h':
-            # Horizontal Bar Chart
-            fig = px.bar(
-                data,
-                x='Count',
-                y=column_name,
-                orientation='h',
-                title=title,
-                labels={'Count': x_label, column_name: y_label}
-            )
-            # Ensure proper ordering by count
-            fig.update_layout(yaxis={'categoryorder': 'total ascending'})
-        else:
-            # Vertical Bar Chart
-            fig = px.bar(
-                data,
-                x=column_name,
-                y='Count',
-                title=title,
-                labels={column_name: x_label, 'Count': y_label}
-            )
-            # Adjust x-axis labels if too many categories
-            if len(data[column_name]) > 5:
-                fig.update_xaxes(tickangle=45)
+        # --- 3. Plotly Visualizations ---
+        st.header('📊 Gender Distribution')
 
-        st.subheader(title)
-        st.plotly_chart(fig, use_container_width=True)
-        st.markdown("---")
+        # 3.1. Plotly Pie Chart (replacing the Matplotlib pie chart)
+        st.subheader('Gender Distribution: Pie Chart')
+        fig_pie = px.pie(
+            gender_counts,
+            values='Count',
+            names='Gender',
+            title='Gender Distribution in Arts Faculty',
+            hole=.3 # Optional: makes it a donut chart
+        )
+        st.plotly_chart(fig_pie, use_container_width=True)
 
-    # --- New Visualizations (Converting Matplotlib/Seaborn to Plotly Bar Charts) ---
+        st.divider()
 
-    # Visualization 1: Arts Program Distribution (Horizontal Bar Chart)
-    display_bar_chart(
-        arts_df,
-        column_name='Arts Program',
-        title='Distribution of Arts Programs',
-        x_label='Count',
-        y_label='Program',
-        orientation='h'
-    )
+        # 3.2. Plotly Bar Chart (replacing the Matplotlib bar chart)
+        st.subheader('Gender Distribution: Bar Chart')
+        fig_bar = px.bar(
+            gender_counts,
+            x='Gender',
+            y='Count',
+            title='Gender Distribution in Arts Faculty',
+            labels={'Count': 'Number of Individuals'}
+        )
+        # Customize the bar chart appearance
+        fig_bar.update_xaxes(title_text='Gender')
+        fig_bar.update_yaxes(title_text='Count')
 
-    # Visualization 2: Academic Year Distribution
-    # Note: Column name is corrected to 'Bachelor Academic Year in EU' after stripping whitespace
-    display_bar_chart(
-        arts_df,
-        column_name='Bachelor Academic Year in EU',
-        title='Distribution of Academic Years in Arts Faculty',
-        x_label='Academic Year'
-    )
+        st.plotly_chart(fig_bar, use_container_width=True)
 
-    # Visualization 3: HSC Study Medium Distribution
-    display_bar_chart(
-        arts_df,
-        column_name='H.S.C or Equivalent study medium',
-        title='Distribution of HSC Study Medium',
-        x_label='Study Medium'
-    )
-
-    # Visualization 4: Coaching Center Attendance
-    display_bar_chart(
-        arts_df,
-        column_name='Did you ever attend a Coaching center?',
-        title='Did students attend a Coaching Center?',
-        x_label='Attended Coaching Center'
-    )
-
-    # Visualization 5: Expectation Met Distribution (Q5)
-    # Note: Column name is corrected to 'Q5 [To what extent your expectation was met?]'
-    display_bar_chart(
-        arts_df,
-        column_name='Q5 [To what extent your expectation was met?]',
-        title='To what extent was expectation met?',
-        x_label='Rating'
-    )
-
+    else:
+        st.warning("The DataFrame does not contain a 'Gender' column for analysis.")
 else:
-    st.warning("Could not proceed with analysis because the data could not be loaded or is empty.")
+    st.warning("Could not proceed with analysis because the data could not be loaded.")
+
+# --- How to Run the App ---
+st.sidebar.markdown(
+    """
+    *To run this app:*
+    1. Save the code above as a Python file (e.g., app.py).
+    2. Open your terminal and navigate to the directory where you saved the file.
+    3. Run the command: streamlit run app.py
+    """
+)
