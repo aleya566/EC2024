@@ -40,7 +40,7 @@ if not arts_df.empty:
     with col1:
         st.subheader("1. Distribution of Arts Programs")
         st.markdown(
-            """***Insight:*** This visualization clearly reveals significant **program popularity differences** within the Arts Faculty. A few specific programs, likely including core disciplines, attract a disproportionately high number of students, demonstrating concentrated demand. Conversely, the majority of programs have very limited enrollment, suggesting specialized or niche offerings. This skewed distribution is crucial for resource allocation, faculty planning, and marketing efforts aimed at less popular departments."""
+            """***Insight:*** Wow, it really jumps out how **uneven the program sizes** are here. It looks like most students are packed into just a couple of main Arts programs, which probably means those are the most popular ones people apply for. Meanwhile, a lot of the other programs are pretty small—almost like specialty groups with limited enrollment. The faculty really needs to see this when figuring out which departments need more professors or classroom space next year."""
         )
         program_counts = arts_df['Arts Program'].value_counts().reset_index()
         program_counts.columns = ['Arts Program', 'Count']
@@ -61,7 +61,7 @@ if not arts_df.empty:
     with col2:
         st.subheader("2. Academic Year Distribution")
         st.markdown(
-            """***Insight:*** The academic year distribution provides insight into the **student retention and stability profile** of the faculty. Ideally, enrollment should be relatively consistent across the years, but any notable drop-offs (especially after the first year) may signal significant attrition or academic hurdles. Conversely, a stable count across the years indicates good student progression. This data is vital for assessing the effectiveness of academic support services and identifying years with high student loads."""
+            """***Insight:*** This chart is basically showing us **how many students are in each year** of their bachelor's degree right now. If we see a huge drop-off right after the first year, it might be a big problem with students leaving the program or failing classes, which the school would need to address. On the other hand, if the numbers stay pretty similar across all four years, that's a good sign that people are sticking around and graduating. This helps us know if the school is doing a good job keeping students engaged and supported over time."""
         )
         fig2 = px.histogram(
             arts_df,
@@ -77,7 +77,7 @@ if not arts_df.empty:
     with col3:
         st.subheader("3. HSC Study Medium Distribution")
         st.markdown(
-            """***Insight:*** This visualization highlights the **dominant educational background** of the Arts Faculty students. A clear majority of admitted students originate from one specific H.S.C. or equivalent study medium (e.g., Bangla Medium), indicating a concentrated feeder system. This finding is critical because the students' prior educational experience heavily influences their academic needs, proficiency levels, and familiarity with certain teaching styles. The faculty may need to tailor foundational courses to support the learning styles prevalent among this dominant group."""
+            """***Insight:*** Looking at where everyone came from before university, it's clear that **one specific study medium** (like the local or primary medium) is totally dominating the student body. It seems like almost all our students shared that same kind of high school background and teaching style, which means they likely have similar academic foundations. This is important because professors might need to make sure they aren't relying on knowledge that only students from other mediums would have. This concentration impacts how lessons are taught."""
         )
         fig3 = px.histogram(
             arts_df,
@@ -94,7 +94,7 @@ if not arts_df.empty:
     with col4:
         st.subheader("4. Coaching Center Attendance")
         st.markdown(
-            """***Insight:*** The attendance data demonstrates that a **very high percentage of successful applicants utilized external coaching centers** prior to admission. This suggests that the entrance process is highly competitive, and specialized preparation beyond the standard school curriculum is perceived as necessary. This trend may indicate an equity issue, where access to expensive external coaching becomes a significant factor in securing admission. The faculty could use this information to review the alignment between its entrance exam content and typical secondary school preparation."""
+            """***Insight:*** This pie chart is pretty eye-opening because a **huge majority of students** admitted here said they went to a coaching center beforehand. It definitely makes you wonder if it's getting too competitive to get in without paying for outside help, suggesting the entrance process requires specialized training. It seems like just graduating high school isn't enough anymore, and almost everyone feels they **have to get specialized training** to successfully pass the entrance exam for the Arts Faculty. This is a big trend in admissions."""
         )
         coaching_counts = arts_df['Did you ever attend a Coaching center?'].value_counts().reset_index()
         coaching_counts.columns = ['Attended Coaching Center', 'Count']
@@ -114,7 +114,7 @@ if not arts_df.empty:
     with col5:
         st.subheader("5. Class Modality Distribution")
         st.markdown(
-            """***Insight:*** This chart clearly identifies the **primary method of instructional delivery** utilized across the Arts Faculty courses. The dominance of one modality, whether 'In-Person', 'Online', or 'Hybrid', reflects the current operational and pedagogical strategy of the institution. Understanding this distribution is essential for IT infrastructure planning, faculty training needs, and student support services geared towards effective learning in that environment. This data can also inform decisions about expanding or contracting alternative delivery methods."""
+            """***Insight:*** This bar graph tells us exactly **how classes are mostly being run** in the Arts Faculty—whether they are 'Online', 'In-Person', or maybe a 'Hybrid' mix. Whatever category has the tallest bar is definitely what most students are experiencing on a day-to-day basis. This information is key for everyone, from the IT department (making sure the right tech works) to the students (knowing what kind of learning environment they should prepare for). It reflects the current standard teaching approach."""
         )
         fig5 = px.histogram(
             arts_df,
@@ -131,7 +131,7 @@ if not arts_df.empty:
     with col6:
         st.subheader("6. Gender Distribution (Pie Chart)")
         st.markdown(
-            """***Insight:*** The pie chart provides a clear visual summary of the **gender composition**, confirming a significant **gender imbalance** within the Arts Faculty. One gender category is substantially more represented than the other, often reflecting broader societal trends regarding subject choice. This finding is critical for promoting institutional diversity goals and may prompt internal reviews into recruitment strategies, departmental culture, and outreach efforts to underserved groups. The chart shows the proportional breakdown of the student body."""
+            """***Insight:*** The pie chart clearly shows a big **gender gap** in the Arts Faculty, where one gender is obviously enrolling much more than the other. When you look at the proportional slices, the difference in size is hard to ignore, meaning the student body isn't very balanced right now. This kind of heavy tilt toward one gender is something the administration should look into. They need to figure out why this is happening and if the school needs to do more to get people of the underrepresented gender interested in arts programs."""
         )
         gender_counts_pie = arts_df['Gender'].value_counts().reset_index()
         gender_counts_pie.columns = ['Gender', 'Count']
@@ -151,7 +151,7 @@ if not arts_df.empty:
     with col7:
         st.subheader("7. Gender Distribution (Bar Chart)")
         st.markdown(
-            """***Insight:*** This bar chart provides a clear, side-by-side **count comparison** of male versus female enrollment, visually reinforcing the gender disparity observed in the pie chart. It allows stakeholders to quickly assess the absolute numbers involved in the imbalance, which is useful for setting numerical targets for diversity initiatives. The heights of the bars make the magnitude of the difference stark, emphasizing the need for targeted policies to encourage applications from the underrepresented gender."""
+            """***Insight:*** This bar chart is the most straightforward way to see the **gender enrollment difference**, showing us the exact count for each gender category side-by-side. The height difference between the bars is really noticeable, confirming that the imbalance is quite large. This chart makes it really easy for the administration to see the exact scale of the disparity and decide how to address it with specific recruitment goals. It clearly quantifies the enrollment gap."""
         )
         gender_counts_bar = arts_df['Gender'].value_counts().reset_index()
         gender_counts_bar.columns = ['Gender', 'Count']
