@@ -13,7 +13,6 @@ def load_data():
     """
     url = 'https://raw.githubusercontent.com/aleya566/EC2024/refs/heads/main/arts_faculty_data.csv'
     try:
-        # Assuming the variable name used in the original plots was arts_df
         arts_df = pd.read_csv(url)
         return arts_df
     except Exception as e:
@@ -30,15 +29,16 @@ if not arts_df.empty:
     st.subheader("Data Preview")
     st.dataframe(arts_df.head())
 
-    # Create two columns for better layout
-    col1, col2 = st.columns(2)
-    col3, col4 = st.columns(2)
-    col5, _ = st.columns(2) # Use one column for the last chart
+    # Create columns for better layout
+    col1, col2 = st.columns(2) # Arts Programs, Academic Year
+    col3, col4 = st.columns(2) # HSC Study Medium, Coaching Center
+    col5, col6 = st.columns(2) # Class Modality, Gender Pie Chart
+    col7, _ = st.columns(2)    # Gender Bar Chart (using one column for this one)
+
 
     # --- Visualization 1: Distribution of Arts Programs (Plotly Express Bar Chart) ---
     with col1:
         st.subheader("1. Distribution of Arts Programs")
-        # Calculate value counts and sort for ordered bar chart
         program_counts = arts_df['Arts Program'].value_counts().reset_index()
         program_counts.columns = ['Arts Program', 'Count']
         
@@ -48,7 +48,7 @@ if not arts_df.empty:
             x='Count',
             orientation='h',
             title='Distribution of Arts Programs',
-            color='Arts Program', # Optional: Add color for differentiation
+            color='Arts Program',
             template='plotly_white'
         )
         fig1.update_layout(yaxis={'title': 'Program'}, xaxis={'title': 'Count'}, showlegend=False)
@@ -84,7 +84,6 @@ if not arts_df.empty:
     # --- Visualization 4: Coaching Center Attendance (Plotly Express Pie Chart) ---
     with col4:
         st.subheader("4. Coaching Center Attendance")
-        # For a binary/categorical variable, a Pie Chart or simple Bar Chart works well
         coaching_counts = arts_df['Did you ever attend a Coaching center?'].value_counts().reset_index()
         coaching_counts.columns = ['Attended Coaching Center', 'Count']
         
@@ -94,7 +93,7 @@ if not arts_df.empty:
             names='Attended Coaching Center',
             title='Did students attend a Coaching Center?',
             template='plotly_white',
-            hole=.3 # Add a donut hole for style
+            hole=.3
         )
         fig4.update_traces(textposition='inside', textinfo='percent+label')
         st.plotly_chart(fig4, use_container_width=True)
@@ -112,6 +111,41 @@ if not arts_df.empty:
         fig5.update_layout(xaxis={'title': 'Class Modality', 'categoryorder':'total descending'}, yaxis={'title': 'Count'}, showlegend=False)
         fig5.update_xaxes(tickangle=45)
         st.plotly_chart(fig5, use_container_width=True)
+
+    # --- Visualization 6: Gender Distribution (Plotly Express Pie Chart) ---
+    with col6:
+        st.subheader("6. Gender Distribution (Pie Chart)")
+        gender_counts_pie = arts_df['Gender'].value_counts().reset_index()
+        gender_counts_pie.columns = ['Gender', 'Count']
+        
+        fig6 = px.pie(
+            gender_counts_pie,
+            values='Count',
+            names='Gender',
+            title='Gender Distribution in Arts Faculty',
+            template='plotly_white',
+            hole=.4 # Added a hole for a donut effect
+        )
+        fig6.update_traces(textposition='inside', textinfo='percent+label')
+        st.plotly_chart(fig6, use_container_width=True)
+
+    # --- Visualization 7: Gender Distribution (Plotly Express Bar Chart) ---
+    with col7:
+        st.subheader("7. Gender Distribution (Bar Chart)")
+        gender_counts_bar = arts_df['Gender'].value_counts().reset_index()
+        gender_counts_bar.columns = ['Gender', 'Count']
+
+        fig7 = px.bar(
+            gender_counts_bar,
+            x='Gender',
+            y='Count',
+            title='Gender Distribution in Arts Faculty',
+            color='Gender',
+            template='plotly_white'
+        )
+        fig7.update_layout(xaxis={'title': 'Gender'}, yaxis={'title': 'Count'}, showlegend=False)
+        st.plotly_chart(fig7, use_container_width=True)
+
 
 else:
     st.warning("The dashboard cannot be displayed because data loading failed.")
